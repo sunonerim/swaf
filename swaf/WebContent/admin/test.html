@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SWAF ADMIN</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="http://getbootstrap.com/examples/starter-template/starter-template.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css"/>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="../js/bootstrap-table.js"></script>
+<script src="../js/bootstrap-table-editable.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+</head>
+
+<script type='text/javascript'>
+$(function(){
+	$.fn.editable.defaults.mode = 'inline';
+	
+	$('#username').editable({
+	    type: 'select',
+	    url: '/post',    
+	    pk: 1,    
+	    title: 'Enter username',
+	    ajaxOptions: {
+	        dataType: 'json'
+	    },
+	    source: [
+			        {value: 1, text: 'Male'},
+			        {value: 2, text: 'Female'}
+			    ],
+	    success: function(response, newValue) {
+	        if(!response) {
+	            return "Unknown error!";
+	        }          
+	        
+	        if(response.success === false) {
+	             return response.msg;
+	        }
+	    }        
+	});
+	
+	$('#price').editable({
+			value: 2    
+		    ,source: [
+		        {value: 1, text: 'Male'},
+		        {value: 2, text: 'Female'}
+		    ]  
+	});
+	
+	$('#username').editable({
+	    type: 'text'
+	});		  
+	
+}); 
+</script>
+
+<body>
+<div style="margin: 150px">
+    <a href="#" id="username">awesome</a>
+</div>
+
+     <div class="container">
+        <h1>Editable</h1>
+        <table id="table"
+               data-toggle="table"
+               data-pagination="true"
+               data-show-export="true"
+               data-url="data.js">
+               
+            <thead>
+	            <tr>
+	                <th data-field="id">ID</th>
+	                <th data-field="name" data-editable="true" >Item Name</th>
+	                <th data-field="price" data-editable="true" data-type="select">Item Price</th>
+	            </tr>
+            </thead>
+            
+            
+        </table>
+    </div>
+       
+</body>
+</html>
+

@@ -1,0 +1,781 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+
+<script src="/m/js/jsrender.js"></script>
+
+<style type="text/css">
+/* 
+.canvas_pane {
+  overflow:hidden;
+}
+*/
+.canvas {
+  position: absolute;
+  height:600px;
+  width: 800px;
+  overflow:hidden;
+  
+  border: solid 1px #ccc;
+  
+}
+
+.bottom {
+	background-image:url("/m/imgs/common/bg001.png");
+}
+.dark {
+  background: #000;
+  opacity: 0.5;
+  filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
+img.clip{
+  position: absolute;
+  /* clip: rect(0px 200px 200px 0px); */
+}
+
+.modal-verybig{
+	width  :1200px;
+	/* height : 960px; */	
+}
+
+
+.smk-imageThumbnail
+{
+	max-width : 160px;
+	height    : 160px;
+	padding   : 4px;
+	margin    : 0px 4px 4px 0px;
+	display   : inline-block;
+	border    : solid 1px #ccc;
+	
+}
+
+.smk-imageThumbnail:hover
+{
+	background: #CCC;	
+}
+
+.smk-imageThumbnail img
+{
+	max-width : 150px;
+	height    : 150px;
+}
+</style>
+
+<script id="smk-smallHtmletBlock" type="text/x-jsrender">
+<a href="#" class="list-group-item">
+ <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;">
+ <span class="label label-success">{{:type}}</span> {{:fileUrl}}
+</a>	  		
+</script>
+
+<script id="smk-productImageThumbnail-templ" type="text/x-jsrender">
+		<div class="smk-imageThumbnail">
+          <img src="{{:url}}" >          
+        </div>		
+</script>
+
+<script id="smk-textTemplateElement-templ" type="text/x-jsrender">
+				<div class="panel panel-info">
+				  <div class="panel-heading"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> {{:tagId}}</div>
+				  <div class="panel-body">
+				  <div class="input-group">
+				      <input id="ta-001" type="text" class="form-control" value="{{:defaultField}}">
+				      <span class="input-group-btn">
+				        <button class="btn btn-default" type="button">Apply</button>
+				      </span>
+				    </div><!-- /input-group -->				    
+				  </div>				  
+				</div>
+</script>
+
+<script id="smk-imageTemplateElement-templ" type="text/x-jsrender">
+				<div class="panel panel-info">
+				  <div class="panel-heading"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span>{{:tagId}}</div>
+				  <div class="panel-body">
+				    <div class="input-group">
+										      
+				      <span class="input-group-btn">
+						<button class="btn btn-default" ><img id="{{:tagId}}-view-img"src="{{:imageTemplObj.imageUrl}}" style="width:20px; height:20px;"/></button>						
+				        <button class="btn btn-default" type="button" id="smk-resizeBigger-btn"  onclick="smkHandleResizeBigger('{{:tagId}}')">+</button>
+				        <button class="btn btn-default" type="button" id="smk-resizeSmaller-btn" onclick="smkHandleResizeSmaller('{{:tagId}}')">-</button>
+				        <button class="btn btn-default" type="button" id="smk-resetSize-btn"     onclick="smkHandleReset('{{:tagId}}')">1</button>						
+				        <button class="btn btn-default" type="button" id="smk-selectImg-btn"     onclick="smkHandleSelect('{{:tagId}}')">Select Image</button>				        
+				      </span>
+				    </div>				    
+				  </div>				  
+				</div>	
+</script>
+
+<title>SOMket Listing Editor</title>
+</head>
+<body style="padding:4px;">
+
+
+
+<div class="row">
+  <div class="col-md-2">
+  	<div class="panel panel-default">
+  		<div class="panel-heading">Htmlet Stack</div>
+  		<div class="panel-body">			  		
+			<div id="smk-gHtmletstack-panel" class="list-group"></div>		    	  		
+  		</div>
+	</div>  
+  </div>
+  
+  <div class="col-md-6">  	
+  	<iframe id="htmlet-edit-pane" width="100%" height="500px" style="border:none;"></iframe>
+  </div>
+  
+  <div class="col-md-4">
+    
+    <div class="panel panel-default">
+  		<div class="panel-heading">Template Elements</div>
+  		<div class="panel-body">			  		
+			<div id="smk-templateElement-panel" class="list-group">
+				
+			</div>		    	  		
+  		</div>
+	</div>  
+	<!-- 
+  	<input   id="ta-001" type="text">
+  	<button  id="ta-apply">apply</button>
+  		
+  	<input   id="ta-002" type="text">
+  	<button  id="ta-img-apply">apply image</button>
+  	<BR>
+  	<button  id="ta-up-btn">up</button>  	
+  	<button  id="ta-right-btn">right</button>
+  	<button  id="ta-left-btn">left</button>
+  	<button  >down</button>
+  	<button  id="ta-add-image-btn">add image</button>
+  	 -->
+  </div>
+</div>
+
+<button id="test-img-send" type="button" class="btn btn-primary">Send ImgEditJob Parameter Test</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Image Select Dialog</h4>
+      </div>
+      
+      <div id="smk-imageSelect-panel" class="modal-body">
+
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Apply Image</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+
+<script>
+
+
+var	gCurrentImageTemplElemet = null ;
+
+var gImageProc  = new SmkImageProc  ( );
+
+
+//********************************
+//	SmkImageTempl
+//
+function	SmkImageTempl( _templ_anchor_id){
+	
+	this.templAnchorId   = _templ_anchor_id;	// IMG element ID.
+	
+	this.templWidth      = $("iframe").contents().find( _templ_anchor_id ).width();
+	this.templHeight     = $("iframe").contents().find( _templ_anchor_id ).width();
+	this.origImageWidth  = 0;
+	this.origImageHeight = 0;
+	
+	this.curImageWidth   = 0;   // current image width;
+	this.curImageHeight  = 0;   // current image width;
+	this.imageOffsetX = 0;
+	this.imageOffsetY = 0;
+	this.curImageOffsetMinX = 0;
+	this.curImageOffsetMinY = 0;
+	
+	this.imageUrl		  = null ;		// image URL 
+	
+};
+
+
+//********************************
+//	SmkImageProc
+//
+function	SmkImageProc( ){
+	
+	this.imageTempl = null;
+	
+	this.setImageTempl = function( imageTempl ) {
+		this.imageTempl = imageTempl;		
+	};
+	
+	this.loadImage  = function ( imageTempl, img_src ){
+		
+		// remove previous IMG element and then
+		var $img = $("iframe").contents().find( imageTempl.templAnchorId );
+		var $parent_of_img = $("iframe").contents().find( imageTempl.templAnchorId ).parent();
+		
+		$img.remove();
+		$("<img id='ta-0002' />").appendTo( $parent_of_img).attr("id", imageTempl.templAnchorId.substring(1) );
+		$img = $("iframe").contents().find( imageTempl.templAnchorId );
+		
+		$("iframe").contents().find( imageTempl.templAnchorId ).data("smk-image-proc", this);			
+		$("iframe").contents().find( imageTempl.templAnchorId ).attr("load",   	setTimeout( this.checkImageLoaded(this), 500 ));
+		$("iframe").contents().find( imageTempl.templAnchorId ).attr("src",    	img_src );		
+		imageTempl.imageUrl = img_src;
+	};
+	
+	this.checkImageLoaded = function( me ) {		
+		console.log(me);
+		var img = $("iframe").contents().find( me.imageTempl.templAnchorId );
+		
+		console.log(me.imageTempl.templAnchorId );
+		
+		me.imageTempl.origImageWidth  = img.width();
+		me.imageTempl.origImageHeight = img.height();
+		
+			
+		if ( me.imageTempl.origImageWidth == 0 ) {
+			setTimeout( function(){ me.checkImageLoaded(me);}, 500 );
+		} else {
+			var img_offset = img.offset();
+						
+			me.imageTempl.curImageWidth  = me.imageTempl.origImageWidth;
+			me.imageTempl.curImageHeight = me.imageTempl.origImageHeight;
+			me.imageTempl.imageOffsetX = img_offset.left; 
+			me.imageTempl.imageOffsetY = img_offset.top;
+			me.imageTempl.curImageOffsetMinX = img_offset.left - me.imageTempl.origImageWidth  + me.imageTempl.templWidth ; 
+			me.imageTempl.curImageOffsetMinY = img_offset.top  - me.imageTempl.origImageHeight + me.imageTempl.templHeight ;
+		}
+	};
+	
+	this.resize = function( imageTempl, _new_width ){
+		// check whether new width is bigger than the canvas width.
+		if ( _new_width < imageTempl.templWidth ) return false;
+		
+		var new_height = imageTempl.origImageHeight * _new_width / imageTempl.origImageWidth;
+		if ( new_height < imageTempl.templHeight ) return false;
+		
+		console.log("resize......" + _new_width + "," + new_height );		
+		var $img = $("iframe").contents().find( imageTempl.templAnchorId );
+		$img.width(_new_width);
+		
+		// set current Image width from the real image element.
+		imageTempl.curImageWidth   = _new_width ;   // current image width;
+		imageTempl.curImageHeight  = $img.height();   // current image width;
+		
+		imageTempl.curImageOffsetMinX = imageTempl.imageOffsetX - $img.width()  + imageTempl.templWidth ; 
+		imageTempl.curImageOffsetMinY = imageTempl.imageOffsetY - $img.height() + imageTempl.templHeight ;
+		
+		//$("iframe").contents().find( this.imageTempl.templAnchorId ).width(_new_width);
+		//$("iframe ta-0002").width(_new_width);
+		return true;
+	};
+	
+	this.reset = function(imageTempl) {
+		var $img = $("iframe").contents().find( imageTempl.templAnchorId );
+		$img.width( imageTempl.origImageWidth );
+	};
+	
+	// 일단 움직임은 현재 신경쓰지 않는다.
+	this.move   = function( imageTempl, move_x, move_y) {		
+		var $img = $("iframe").contents().find( imageTempl.templAnchorId );
+		var img_offset = $img.offset();// $('#htmlet-edit-pane').contents().find('#ta-0002').offset();
+		
+		img_offset.top  += move_y;
+		img_offset.left += move_x;
+		
+		console.log( "img_offset.left:" +  img_offset.left + " , this.imageTempl.curImageOffsetMinX:" + imageTempl.curImageOffsetMinX );
+		
+		if( img_offset.left > imageTempl.imageOffsetX ){			
+			img_offset.left = imageTempl.imageOffsetX	;		
+		} else if ( img_offset.left < imageTempl.curImageOffsetMinX ) {
+			img_offset.left = imageTempl.curImageOffsetMinX;
+		}
+		
+		
+		if( img_offset.top  > imageTempl.imageOffsetY )  {
+			img_offset.top =  imageTempl.imageOffsetY ;
+		} else if (img_offset.top  < imageTempl.curImageOffsetMinY){
+			img_offset.top  = imageTempl.curImageOffsetMinY;
+		}
+				
+		console.log( $('#htmlet-edit-pane').contents().find('#ta-0002').position() );
+		$img.offset( img_offset );
+	}
+
+};
+
+
+
+
+//////////////////////////   DragMouse module begin ///////////////////////////
+var		gDragMouse ;
+function	DragMouse( _mouseTarget) {
+	 
+	this.mouseDown      	= false;
+	this.prevMousePosition	= {x:0, y:0};	
+	this.mouseTarget        = _mouseTarget;
+	
+	this.mouseTarget.mousedown( function(event){
+		
+		gDragMouse.mouseDown = true;
+		gDragMouse.prevMousePosition.x = event.clientX;
+		gDragMouse.prevMousePosition.y = event.clientY;
+	} );
+
+	this.mouseTarget.mousemove( function(event){
+		 event.preventDefault();
+		if( !gDragMouse.mouseDown ) return ;
+
+		gImageProc.move( smkFindImageTempl( $(this).attr("imgId") ), event.clientX- gDragMouse.prevMousePosition.x, event.clientY- gDragMouse.prevMousePosition.y);
+		
+		gDragMouse.prevMousePosition.x = event.clientX;
+		gDragMouse.prevMousePosition.y = event.clientY;
+	} );
+
+	this.mouseTarget.mouseup( function(event){		
+		gDragMouse.mouseDown = false;
+	} );
+}
+
+function	createDragMouse(_mouseTarget){
+	gDragMouse = new DragMouse(_mouseTarget);
+	return gDragMouse;
+}
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^     DragMouse module end ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ 
+
+//#################################  Htmlet Template Elements data structure begin ################
+var	gHtmlets = [
+   	          { templId:"0001",
+   	        	fileUrl:"htmlet001.html",
+   	        	type   :"detail",
+   	        	templateElements : [{   type:"text",
+   	        							tagId:"ta-0001",
+   	        							defaultField:"images.1.url@Product",
+   	        						},
+   	        						{  type:"image",
+     	        					   tagId:"ta-0002",
+     	        					   defaultField:"images.3.url@Product"
+     	        				    },
+   	        						{  type:"image",
+      	        					   tagId:"ta-0003",
+      	        					   defaultField:"images.4.url@Product"
+      	        				    }     	        				    
+   	        						]
+   	           }
+   	           ,
+   	          {     templId:"0002",
+   	        	    fileUrl:"htmlet002.html",
+      	        	type   :"head",
+      	        	templateElements : [{   type:"text",
+      	        							tagId:"ta-0001",
+      	        							defaultField:"name@Product"
+      	        						},
+      	        						{  type:"image",
+        	        					   tagId:"ta-0002",
+        	        					   defaultField:"images.3.url@Product"
+        	        				    },
+      	        						{  type:"text",
+         	        					   tagId:"ta-0003",
+         	        					   defaultField:"name@Product"
+         	        				    }, 
+        	        				    {  type:"image",
+          	        					   tagId:"ta-0004",
+          	        					   defaultField:"images.3.url@Product"
+          	        				    }        	
+      	        						]
+      	        }
+   	           ,
+    	        { 		templId:"0003",
+   	        	   		fileUrl:"htmlet001.html",
+    	   	        	type   :"detail",
+    	   	        	templateElements : [{   type:"text",
+    	   	        							tagId:"ta-0001",
+    	   	        							defaultField:"images.5.url@Product"
+    	   	        						},
+    	   	        						{  type:"image",
+    	     	        					   tagId:"ta-0002",
+    	     	        					   defaultField:"images.1.url@Product"
+    	     	        				    },
+    	   	        						{  type:"image",
+    	      	        					   tagId:"ta-0003",
+    	      	        					 defaultField:"images.2.url@Product"
+    	      	        				    }     	        				    
+    	   	        						]
+    	   	    }
+   	           ,
+	   	        { 		
+	   	        	templId:"0004",
+						fileUrl:"htmlet001.html",
+						type   :"detail",
+	   	   	        	templateElements : [{  type:"text",
+	   	   	        							tagId:"ta-0001",
+	   	   	        							defaultField:"name@Product"
+	   	   	        						},
+	   	   	        						{  type:"image",
+	   	     	        					   tagId:"ta-0002",
+	   	     	        					   defaultField:"image@Product"
+	   	     	        				    },
+	   	   	        						{  type:"image",
+	   	      	        					   tagId:"ta-0003",
+	   	      	        					   defaultField:"image@Product"
+	   	      	        				    }     	        				    
+	   	   	        						]
+	   	   	    }
+	   	        ,
+	   	        { templId:"0005",
+	   	        	   fileUrl:"htmlet001.html",
+	   	   	        	type   :"detail",
+	   	   	        	templateElements : [{  type:"text",
+	   	   	        							tagId:"ta-0001",
+	   	   	        							defaultField:"name@Product"
+	   	   	        						},
+	   	   	        						{  type:"image",
+	   	     	        					   tagId:"ta-0002",
+	   	     	        					   defaultField:"image@Product"
+	   	     	        				    },
+	   	   	        						{  type:"image",
+	   	      	        					   tagId:"ta-0003",
+	   	      	        					   defaultField:"image@Product"
+	   	      	        				    }     	        				    
+	   	   	        						]
+	   	   	    }
+   	           ,
+	   	        { templId:"0006",
+	   	        	   fileUrl:"htmlet001.html",
+	   	   	        	type   :"detail",
+	   	   	        	templateElements : [{  type:"text",
+	   	   	        							tagId:"ta-0001",
+	   	   	        							defaultField:"name@Product"
+	   	   	        						},
+	   	   	        						{  type:"image",
+	   	     	        					   tagId:"ta-0002",
+	   	     	        					   defaultField:"image@Product"
+	   	     	        				    },
+	   	   	        						{  type:"image",
+	   	      	        					   tagId:"ta-0003",
+	   	      	        					   defaultField:"image@Product"
+	   	      	        				    }     	        				    
+	   	   	        						]
+	   	   	    }   	           
+   	          ];
+ 
+var	Products = [
+				{name:"MORGAN 시가렛 팬츠 3종"
+		         ,image:"http://image.gsshop.com/image/15/42/15429251_1424163596426.jpg"
+		         ,smallImage:"http://image.gsshop.com/image/15/42/15429251_H1.jpg"
+			
+				 ,images: [  {url:"http://image.gsshop.com/image/14/84/14846951_L1.jpg", optionCode:"blue"}
+				 			,{url:"http://image.gsshop.com/image/14/84/14846951_L2.jpg", optionCode:"gray"}
+				 			,{url:"http://image.gsshop.com/image/14/84/14846951_L3.jpg", optionCode:"gray"}
+				 			,{url:"http://image.gsshop.com/image/14/84/14846951_L4.jpg", optionCode:"gray"}
+				 			,{url:"http://image.gsshop.com/image/14/84/14846951_L5.jpg", optionCode:"gray"}
+				 			,{url:"http://image.gsshop.com/image/14/84/14846951_L6.jpg", optionCode:"gray"}
+				 			
+				           ]
+			
+				 } 
+				,
+				{name:"쏘울 이태리 라나가또 울100 니트"
+				 ,image:"http://image.gsshop.com/image/13/95/13956259_L3.jpg"
+				 ,smallImage:"http://image.gsshop.com/image/13/95/13956259_H1.jpg"
+				 ,images: [ {url:"http://image.gsshop.com/image/13/95/13956259_L1.jpg", optionCode:"blue"}
+			 	  		   ,{url:"http://image.gsshop.com/image/13/95/13956259_L2.jpg", optionCode:"gray"}
+			 			   ,{url:"http://image.gsshop.com/image/13/95/13956259_L3.jpg", optionCode:"brown"}				 			
+			              ]				 
+				}
+		       ];
+var	gProduct = Products[0];
+
+// 템플릿을 근거로 template element 마다 대치될 값의 정보
+var	gTemplateReplaceValues = [
+   	                         { templId : "0001", tagId:"ta-0001", replaceValue:"프로덕트네임"}
+   	                      	,{ templId : "0001", tagId:"ta-0002", replaceValue:"http://cn.allthatstar.com/wp-content/uploads/2015/03/20150302_1425303100_85632600_1_99_20150302223313.jpg"}
+   	                        ];
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  Htmlet Template Anchor data structure begin ^^^^^^^^^^^^^^^^
+
+
+
+//###############################################################################################
+//
+//	entry point
+//
+//###############################################################################################
+var	gCurrentHtmlet;
+
+$(document).ready(function(){
+	
+	// build HtmlStackPanel
+	/*
+	for ( var i =0; i<gHtmlets.length; i++){		
+		$( $.templates("#smk-smallHtmletBlock").render( gHtmlets[i]) ).appendTo("#smk-gHtmletstack-panel").data("htmlet", gHtmlets[i] );
+	
+		for ( var j=0; j<gHtmlets[i].templateElements.length; j++){
+			gHtmlets[i].templateElements[j].imageTemplObj = new SmkImageTempl ( "#" + gHtmlets[i].templateElements[j].tagId );
+			gHtmlets[i].templateElements[j].replaceVal    = null;
+		}
+	}
+	*/
+	
+	smkInitEditData( gHtmlets, gTemplateReplaceValues );
+	
+	// Htmlet Block click handler
+	$("#smk-gHtmletstack-panel a").click(function(){
+		$("#smk-gHtmletstack-panel a").removeClass("active");
+		$(this).addClass("active");
+		
+		var htmlet = $(this).data("htmlet");
+		gCurrentHtmlet = htmlet;
+				
+		// load iframe.
+		$("iframe").attr("src", htmlet.fileUrl );
+		
+		
+		//*
+		// set template Elements Panel
+		$("#smk-templateElement-panel").empty();		
+		for ( var i=0; i<htmlet.templateElements.length; i++){
+			switch( htmlet.templateElements[i].type ){
+				case "text":
+					$( $.templates("#smk-textTemplateElement-templ").render(htmlet.templateElements[i]) )						
+						.appendTo("#smk-templateElement-panel")
+						.data("templ-elem", htmlet.templateElements[i])
+						.find("input").val( smkGetFieldValue(htmlet.templateElements[i].defaultField) );
+					break;
+					
+				case "image":
+					$( $.templates("#smk-imageTemplateElement-templ")
+							.render(htmlet.templateElements[i]) )
+							.appendTo("#smk-templateElement-panel")
+							.data("templ-elem",htmlet.templateElements[i]);
+					break;
+					
+				default:
+					$( $.templates("#smk-imageTemplateElement-templ")
+							.render(htmlet.templateElements[i]) )
+							.appendTo("#smk-templateElement-panel")
+							.data("templ-elem",htmlet.templateElements[i]);
+					break;					
+			}
+		}		
+	});
+	
+	$("iframe").bind("load",smkInitHtmletFrame );
+	$( "#smk-gHtmletstack-panel>a:first" ).trigger( "click" );
+	
+	$("#test-img-send").click(function(){
+		$.ajax({
+				type		: "GET",
+				url			: "/m/s/dummy", 
+				data		: Products[0], 	//JSON.stringify(Products[0]),//data		: Products[0], 		//
+				contentType	: "application/json; charset=utf-8", 
+				dataType	: "json", 
+				success		: function(){
+										alert("recieve response of simple");
+							  }
+			});
+	});
+	
+}); // end of $(document).ready
+
+
+/**
+ * 최초 데이터를 로딩후 정보에대한 초기작업을 진행한다. 
+ 	GHtmlet과 gTemplateReplaceValues 의 정보를 연동하여 최초의 정보를 만든다. 
+ */
+function	smkInitEditData( htmlets, templ_replace_values){
+	// build HtmlStacjPanel
+	for ( var i =0; i<htmlets.length; i++){		
+		$( $.templates("#smk-smallHtmletBlock").render( htmlets[i]) ).appendTo("#smk-gHtmletstack-panel").data("htmlet", htmlets[i] );
+	
+		for ( var j=0; j<htmlets[i].templateElements.length; j++){
+			htmlets[i].templateElements[j].replaceValue  = smkFindReplaceValue( templ_replace_values, htmlets[i].templId, htmlets[i].templateElements[j].tagId) ;
+			
+			// 기존에 작업한 내역이 없다면 여기서  defaultField 값을 처리한다. 
+			if ( htmlets[i].templateElements[j].replaceValue == null ){
+				htmlets[i].templateElements[j].replaceValue = smkGetFieldValue( htmlets[i].templateElements[j].defaultField ); 
+			}
+			console.log(" htmlets[i].templateElements[j].replaceValue >>" + htmlets[i].templateElements[j].replaceValue );			
+			
+			// 이미지의 경우 ImageTempl 을 생성한다.
+			switch( htmlets[i].templateElements[j].type ){
+				case "image":
+					htmlets[i].templateElements[j].imageTemplObj 			= new SmkImageTempl ( "#" + htmlets[i].templateElements[j].tagId );
+					htmlets[i].templateElements[j].imageTemplObj.imageUrl 	= htmlets[i].templateElements[j].replaceValue;
+					break;
+				
+				case "text":					
+					htmlets[i].templateElements[j].textTemplObj  = htmlets[i].templateElements[j].replaceValue ;
+					break;
+			}
+		}
+	}	
+}
+
+/**
+ * 
+ */
+function	smkInitHtmletFrame(){
+	// 이전에 편집한 자료를 바탕으로 편집 정보를 구성한다. 
+	// 이미지인 경우 기존의 자료가 있다면 이를 바탕으로 구성한다. 
+	for ( var i=0; i < gCurrentHtmlet.templateElements.length; i++){
+		//console.log( gCurrentHtmlet.templateElements[i].imageTemplObj )	;
+		
+		switch( gCurrentHtmlet.templateElements[i].type ){
+			// 이미지의 초기화
+			case	"image":
+				var image_templ = gCurrentHtmlet.templateElements[i].imageTemplObj;			
+				if ( image_templ.imageUrl	!= null ){
+					console.log("HAS image_templ.imageUrl " + image_templ.imageUrl );
+					$("iframe").contents().find( image_templ.templAnchorId ).attr("src", image_templ.imageUrl );
+					// TODO 위치 조정 					
+					
+					// 사이즈 조정
+					if( image_templ.curImageWidth > 0 ) $("iframe").contents().find( image_templ.templAnchorId ).width( image_templ.curImageWidth );
+					if( image_templ.curImageHeight > 0 ) $("iframe").contents().find( image_templ.templAnchorId ).height( image_templ.curImageHeight );
+				}
+			case	"text":	
+				if( gCurrentHtmlet.templateElements[i].textTemplObj != null )
+					$("iframe").contents().find( "#"+gCurrentHtmlet.templateElements[i].tagId ).html(gCurrentHtmlet.templateElements[i].textTemplObj);
+				break;				
+		}
+		
+	}
+	
+	// 마우스 이벤트 연동은 다음 기회에
+	createDragMouse($("iframe").contents().find(".smk-image-canvas-area"));	
+}
+
+function	smkFindReplaceValue( templ_replace_values, templ_id, tag_id ){
+	for ( var i=0; i<templ_replace_values.length; i++){
+		if( templ_replace_values[i].templId == templ_id && templ_replace_values[i].tagId == tag_id )
+			return templ_replace_values[i].replaceValue;
+	}
+	return null;
+}
+
+function	smkHandleResizeBigger( tag_id ) {
+	console.log( "gImageProc.imageTempl.curImageWidth:" + gImageProc.imageTempl.curImageWidth );
+	gImageProc.resize( smkFindImageTempl( tag_id ), gImageProc.imageTempl.curImageWidth * 1.1 );			
+}
+
+
+function	smkHandleResizeSmaller( tag_id ) {
+	console.log( "gImageProc.imageTempl.curImageWidth:" + gImageProc.imageTempl.curImageWidth );
+	gImageProc.resize( smkFindImageTempl( tag_id ), gImageProc.imageTempl.curImageWidth * 0.95 );			
+}
+
+function	smkHandleReset(  tag_id ) {
+	console.log("tag_id:" + tag_id );
+	var	image_templ_obj = smkFindImageTempl( tag_id ); 
+	console.log( image_templ_obj );
+	gImageProc.reset( image_templ_obj );
+	gImageProc.imageTempl = image_templ_obj;
+}
+
+function	smkHandleSelect(  tag_id ) {
+		
+	var	image_templ_obj = smkFindImageTempl( tag_id ); 
+	console.log( image_templ_obj );
+	
+	// gImageProc.imageTempl = image_templ_obj;
+	gImageProc.setImageTempl(image_templ_obj);
+	
+	// 사전에 아래와 같이 -view-img 하기로 약속이 되어있음 
+	var view_img_id = "#" + tag_id + "-view-img";  //
+	
+	$("#smk-imageSelect-panel").empty();		
+	for ( var i=0; i<Products[0].images.length; i++){		
+		$( $.templates("#smk-productImageThumbnail-templ").render( Products[0].images[i]) ).appendTo("#smk-imageSelect-panel")
+			.data("image", Products[0].images[i] )			
+			.click( function( ){
+				console.log(view_img_id);
+				$('#myModal').modal("hide");			
+				gImageProc.loadImage( image_templ_obj, $(this).data("image").url   );
+				$( view_img_id ).attr("src", $(this).data("image").url );
+				//$( "#ta-0002-view-img" ).attr("src", $(this).data("image").url );
+			});
+	}
+	
+	// show Modal Dialog
+	$('#myModal').modal('show');
+}
+
+function	smkFindImageTempl( tag_id ){
+	console.log( "TagID > " + tag_id );
+	
+	for ( var i=0; i<gCurrentHtmlet.templateElements.length; i++){
+		console.log( "gCurrentHtmlet.templateElements[i].tagId:" + gCurrentHtmlet.templateElements[i].tagId );
+		if ( gCurrentHtmlet.templateElements[i].tagId == tag_id  ){
+			 return gCurrentHtmlet.templateElements[i].imageTemplObj;
+		} 
+	}
+	return null;
+}
+
+/**
+ *  필드 이름에 대한 규칙은 아래와 같다. 
+ 	필드.필드#index.필드@구조이다
+ 	. 하위의 객체이다. 배열의 경우  	images.1.url@Product Product[images][1][url] 이다. 
+ 	@ 필드와 엔티티의 구분이다.
+ */
+ 
+
+function	smkGetFieldValue( data_meta ){
+	console.log("data_meta : " + data_meta );
+	var metas   = data_meta.split("@");
+	var fields  = metas[0].split(".");
+			
+	switch(metas[1]){
+		case "Product":
+			return smkGetFieldValue2( gProduct, fields );
+			return gProduct[metas[0]];
+		default:
+			return null;			
+	}
+}
+
+function	smkGetFieldValue2( obj, fields ){
+	
+	var new_obj = obj[fields[0]];
+	
+	if( new_obj == null ) return null;	
+	if ( fields.length == 1 ) return new_obj;
+	fields.shift();
+	return smkGetFieldValue2( new_obj, fields );
+}
+
+</script>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+  
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  
+<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+
+<table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>FILE</th>
+          <th>Description</th>
+          <th>Dependency</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <th scope="row">관리</th>
+          <td><a href="/m/a/index.html">/m/a/index.html</a></td>
+          <td>
+          	예약시스템의 관리자 모드에서 에셋의 리스틀 출력함
+          </td>
+		  <td></td>
+        </tr>
+
+        <tr>
+          <th scope="row">관리</th>
+          <td><a href="/m/a/new_asset.html">/m/a/new_asset.html</a></td>
+          <td>
+          	예약시스템의 관리자 모드에서 새로운 에셋을 생성하는 부분
+          </td>
+		  <td>
+		  /m/js/jquery.bootstrap-touchspin.js<BR>
+		  /m/js/jquery.bootstrap-touchspin.css
+		  </td>
+        </tr>
+
+        <tr>
+          <th scope="row">고객</th>
+          <td><a href="/m/c/book.html">/m/c/book.html</a></td>
+          <td>
+          	사용자가 예약을 실행하는 프로그램으로 향후 이부분이 클라이언트의 웹사이트에 PlugIn됨
+          	현재는 prototype을 위한 것이고 HTML을 템플레이트 방식으로 파일을 로드하여 처리할 수 있어야 한다.
+          	이것이 가능하다고 한다면
+          </td>
+		  <td>
+		  	js/jquery.bootstrap.wizard.js<BR>
+		  	js/wizard.js<BR>
+		  	css/gsdk-base.css
+		  </td>
+        </tr>
+
+        
+        <tr>
+          <th scope="row">4</th>
+          <td><a href="/m/v/form.html">/m/v/form.html</a></td>
+          <td>
+			다양한 형태의 필드 구성을 편집하고 입력한 필드의 내용을 MongoDB에 저장한다.<BR> 	
+			action URL : <B>/m/s/insert</B>	          
+          </td>
+		  <td></td>
+        </tr>
+        
+        <tr>
+          <th scope="row">1</th>
+          <td><a href="/m/v/edit.html">/m/v/edit.html</a></td>
+          <td>Htmlet 의 templae anchor의 정보를 편집하는 한다. 현재 수준은 prototype.</td>
+		  <td></td>
+        </tr>
+        
+        <tr>
+          <th scope="row">2</th>
+          <td><a href="/m/v/htmlet001.html">/m/v/htmlet001.html</a></td>
+          <td>실제로 HTMLet를 로드한다. 향후 .jsp로 변경되어야 한다. 그래서 실제Htmlet code만 받아서 다시 화면에 표시하도록한다. </td>
+		  <td></td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td><a href="/m/v/imgSelect.html">/m/v/imgSelect.html</a></td>
+          <td colspan="2">이미지를 선택하고 사이즈를 잡아 자르고 DropBox에 저장한다.</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+
+</body>
+</html>

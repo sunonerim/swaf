@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="/m/js/jquery.loadTemplate-1.4.4.js"></script>
+
+<script>
+$(document).ready(function(){
+	$("button").click(function(){
+		
+		// 여기서 데이터 로딩 한다. 
+		$.get("app/contents.jsp", function(data, status){
+			showContents( data.Result );
+		});
+	});
+});
+
+
+function	showContents( contents ){
+	$(".ui-content").loadTemplate("#template", contents );	
+} 
+</script>
+
+
+<script type="text/html" id="template">    
+    <div class="content-widget">        
+        <h1 data-content="title"></h1>
+        <img data-src="image" data-alt="author" data-link-wrap="authorPicture" width="100%"/>
+        <div data-content="content"></div>
+    </div>
+</script>
+
+
+
+</head>
+<body>
+
+<div data-role="page" id="pageone">
+  <div data-role="panel" id="myPanel"> 
+    <h2>Buy Korean</h2>
+    <p>블랙야크63% 초특가대방출</p>
+    <img src="imgs/products/product_0001.jpg" width="100%"/>
+  </div> 
+
+
+			
+  <div data-role="header">
+    <h1>Page Header</h1>
+    <button class="ui-btn" id="list">Button</button>
+  </div>
+
+  <a href="#myPanel" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Open Panel</a>   
+  <div data-role="main" class="ui-content">  	                         
+  </div>
+
+  <div data-role="footer">
+    <h1>Page Footer</h1>
+  </div> 
+</div> 
+
+</body>
+</html>

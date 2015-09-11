@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SWAF ADMIN</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="http://getbootstrap.com/examples/starter-template/starter-template.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css"/>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="../js/bootstrap-table.js"></script>
+<script src="../js/bootstrap-table-swaf-editable.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+<style>
+input.long-input{
+    width:240px;
+}
+</style>
+
+<script>
+
+
+$(document).ready(function(){
+	
+	buildTable();
+	
+	$('#command-table').on('expand-row.bs.table', function (e, index, row, $detail) {
+		$div = $("<div>Roles </div>"); 
+				
+		for ( var i=0; i<row.Roles.length; i++){
+			$div.append('<span class="label label-primary">'+ row.Roles[i] + '</span> ')			
+		}
+		$div.appendTo( $detail ); //$detail.append();
+		console.log( index , row );
+    });
+	
+	$('#command-table').on('editable-save.bs.table', function(a, col_name, row_data, prev_val, new_val, rrr) {
+		console.log("save this ", col_name, row_data);
+		console.log(a);
+	});
+	
+	
+	$('#remove').click(function () {
+        var ids = getIdSelections();	//$('#command-table').bootstrapTable('getSelections');
+        
+        console.log(ids);
+                
+        $('#command-table').bootstrapTable('remove', {
+            field: 'CommandCD',
+            values: ids
+        });
+        // $('#remove').prop('disabled', true);        
+    });
+	
+	$('#reload').click(function () {
+		$.ajax( {
+			url : "/m/s/listCommand",		
+		}).done(function(data){
+			$('#command-table').bootstrapTable('load',  data.Data.commands);
+			
+			// 아래는 체크박스의 설정
+			var data = $('#command-table').bootstrapTable('getData');
+			$.each(data, function(index, column){			
+				if( column.Kind == 'system'){
+					console.log(column);
+					$('input[data-index="' +  index +'"]').prop('disabled', true);
+				}
+			});
+		});	
+    });
+	
+	//##########################################################################
+	// test make up the form for creating new record.
+	//
+	//$('#command-table').bootstrapTable.buildCreationForm();//('buildCreationForm');
+	$('#command-table').bootstrapTable('buildCreationForm', '#new-command-form');
+
+	$('#test-create').click( function() {				
+		$('#newCommandDialog').modal('show');
+		$('#newCommandDialog a.swaf-auto-gen-field').first().editable('show');
+		$('#newCommandDialog input').first().focus();
+	});
+	
+	$('#save-com-btn').click(function(){
+		//alert("save new Command");
+		/* var new_obj = $('.swaf-auto-gen-field').editable('getValue'); */		
+		
+		$('#command-table').bootstrapTable('submitCreationData', '#new-command-form', "/m/s/createCommand", function(){
+			console.log("SAVE 성공함");
+			$('#newCommandDialog').modal('hide');
+		});			     	        
+	});
+	
+	
+	
+});
+
+
+function getIdSelections() {
+    return $.map($('#command-table').bootstrapTable('getSelections'), function (row) {
+        return row['CommandCD'];
+    });
+}
+
+
+function	buildTable() {	
+	$('#command-table').bootstrapTable({
+		pageSize : 50,
+		idField  : 'CommandCD',
+	    columns: [
+	    {
+	    	ield: 'state',
+            checkbox: true,
+            align: 'center',
+            valign: 'middle'
+	    }, {
+	        field: 'CommandCD',
+	        title: 'CommandCD'
+	    }, {
+	        field: 'ClassName',
+	        title: 'ClassName',
+	        editable: true,
+	        /* 
+	        내가 추가한 것 
+	        현재 레코드값, 현재 컬럼값을 근거로 편집 가능으로 해야 할지를 결정함 
+	        ㅋㅋㅋ 아주 좋아
+	        */
+	        checkEditable: function(row_data, value) {
+	        	if( row_data.Kind !== undefined ) {
+	        		return row_data.Kind == 'udc';
+	        	} 
+	        	return fals;
+	        },
+	        inputclass : 'long-input',
+	        /* 아래는 내가 추가함 inputclass 로 해도 @XXXX css 가 우선순위가 있어 inputclass 로 width 조정하는 것은 의미 없음 */
+	        inputwidth:'420px'
+	        
+	    }, {
+	        field: 'WriterClass',
+	        title: 'WriterClass',
+	        editable: true,
+	        checkEditable: function(row_data, value) {
+	        	if( row_data.Kind !== undefined ) {
+	        		return row_data.Kind == 'udc';
+	        	} 
+	        	return fals;
+	        },
+	        url		 : 'ok_test.jsp'
+		}, {
+	        field    : 'Kind',
+	        title    : 'Kind',
+	        /*
+	        editable :  false,
+	        type     : 'select',
+	        source   : [{value: 'system', text: 'system'}, {value: 'udc', text: 'user defined command'}],
+	        url		 : 'ok_test.jsp'
+	        */
+	        /*
+	        	function() {
+	        	return [
+	              {value: 1, text: 'Active'},
+	              {value: 2, text: 'Blocked'},
+	              {value: 3, text: 'Deleted'},
+	              {value: 'system', text: 'system'}, 
+	              {value: 'udc', text: 'user defined command'}
+	           ];
+	        	}
+	        */	        
+    	}]
+	});
+		
+	$.ajax( {
+		url : "/m/s/listCommand",		
+	}).done(function(data){
+		$('#command-table').bootstrapTable('load',  data.Data.commands);
+		
+		// 아래는 체크박스의 설정
+		var data = $('#command-table').bootstrapTable('getData');
+		$.each(data, function(index, column){			
+			if( column.Kind == 'system'){
+				console.log(column);
+				$('input[data-index="' +  index +'"]').prop('disabled', true);
+			}
+		});
+	});	
+}
+
+</script>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">SWAF</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+	<div class="container" > 
+		<div class="container-fluid">
+	      <div class="row">
+	
+	        <div class="main">
+	          <h1 class="page-header">Command List </h1>
+	          <div class="table-responsive">
+	          
+	          
+			    <div id="toolbar">
+					<!-- Button trigger modal -->
+					<button id="test-create" class="btn btn-primary">TEST</button>
+					<button id="remove" 	class="btn btn-danger" > <i class="glyphicon glyphicon-remove"></i> Delete </button>
+					<button id="reload" 	class="btn btn-primary" >reload</button>
+			    </div>
+	             <table id="command-table" class="table table-striped" 
+	             			data-toolbar="#toolbar"
+	            			data-pagination="true" 
+		       			   data-show-refresh="true"
+				           data-show-toggle="true"
+				           data-show-columns="true"
+				           data-show-export="true"
+				           data-detail-view="true" >				    
+				</table>	
+				
+						
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	</div>    
+        
+
+
+<!-- Modal -->
+<div class="modal fade" id="newCommandDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Create New Command</h4>
+      </div>
+      
+      <div class="modal-body" id="new-command-form">
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save-com-btn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        
+</body>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<!--
+CoreDao 를 다루는 클래스
+-->
+	<CoreDao>com.sunonerim.framework.db.MongodbCoreDao</CoreDao>
+	<CommandHanlder>com.sunonerim.sample.CommandHandlerSample</CommandHanlder>
+	<mongodb.host>localhost</mongodb.host>
+	<mongodb.db>testdb</mongodb.db>
+	
+</configuration>

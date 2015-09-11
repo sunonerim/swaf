@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SWAF ADMIN</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="http://getbootstrap.com/examples/starter-template/starter-template.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.0.3/css/buttons.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.0.1/css/select.dataTables.min.css">
+<link rel="stylesheet" href="../css/editor.dataTables.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
+
+<!-- 
+<script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.0.3/js/buttons.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.0.1/js/dataTables.select.min.js"></script>
+<script src="../js/dataTables.editor.js"></script>
+ -->
+ 
+<script>
+           
+ 
+
+$(document).ready(function(){	
+	buildTable() ;	
+	
+	
+    $("button").click(function(){
+    	console.log("ssssssssssssss");
+    	
+        $("tr").each(function(){
+            alert($(this).text())
+        });
+        
+    });
+    
+	
+	
+	/*
+	$.each( $('td'), function(){
+		console.log("ssssssssssssss");
+	});
+	
+	$('tr').each(function(){
+		console.log("sdfsdfsf");
+	});
+	
+	$('tbody tr').find('td').css( "background-color", "red" );
+	each( function(index, obj){
+		console.log(obj);
+	});
+	 */
+});
+
+function	buildTable() {
+	$.ajax( {
+		url : "/m/s/listCommand",		
+	}).done(function(data){
+		/* console.log(data); */		
+		$('#command-table').DataTable( {
+
+	        data: data.Data.commands,
+	        columns: [
+	            { title: "CommandCD" 			, data: "CommandCD"},
+	            { title: "Cpmmand Class Name"	, data: "ClassName"},
+	            { title: "Writer Class"    		, data: "WriterClass"},
+	            { title: "Kind"     			, data: "Kind"},
+	            { title: "function" }
+	        ]
+			,select: true
+	    });
+		
+		/* 
+		for ( var i=0; i<data.Data.commands.length; i++) {
+			$('#command-table').bootstrapTable('append', data.Data.commands[i] );			
+		}
+		initTable(); 
+		*/
+		
+		$.each( $('td'), function(){
+			console.log("ssssssssssssss");
+		});
+		
+	});	
+}
+
+function	addCommands( parent_obj_id, commands){
+	for ( var i=0; i<commands.length; i++) {
+		var command = commands[i]; 
+		//console.log( field.fieldType );
+		var template = $.templates("#command-record-tmpl");		
+		var htmlOutput = template.render(command);
+		$(parent_obj_id).append(htmlOutput);
+	}
+}
+
+function	initTable (){
+
+ 	$('tbody a[data-name="WriterClass"]').each( function(index, obj){
+ 		console.log(">>" , obj );
+ 		$(this).editable({    
+ 		    source: [
+ 		        {value: 1, text: 'Male'},
+ 		        {value: 2, text: 'Female'}
+ 		    ]  
+ 		});
+ 	})
+}
+
+</script>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">SWAF</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+	<div class="container" > 
+		<div class="container-fluid">
+	      <div class="row">
+	
+	        <div class="main">
+	          <h1 class="page-header">Command List</h1>
+	          <div class="table-responsive">
+	          	<button>Alert the value of each list item</button>
+	            <table id="command-table" class="display table table-striped"  width="100%"></table>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	</div>    
+        
+        
+</body>
+</html>
+

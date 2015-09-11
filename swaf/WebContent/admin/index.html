@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SWAF ADMIN</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="http://getbootstrap.com/examples/starter-template/starter-template.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+	console.log("sfsdfsdfds");
+	 
+	$("tbody").append( "<tr><td>1,002</td><td>amet</td><td>consectetur</td></tr>");
+	$("tbody").append( "<tr><td>1,002</td><td>amet</td><td>consectetur</td></tr>");
+	$("tbody").append( "<tr><td>1,002</td><td>amet</td><td>consectetur</td></tr>");
+	$("tbody").append( '<tr><td>1,002</td><td>amet</td><td>consectetur</td><td>  <button type="button" class="btn btn-default btn-xs">delete</button><button type="button" class="btn btn-default btn-xs">edit</button></td></tr>');
+          
+	/* 
+    $("tbody").click(function(){
+        $("p").hide();
+    }); 
+    */
+        
+});
+</script>
+	
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">SWAF</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+<div class="container">
+
+<div class="container-fluid">
+      <div class="row">
+
+        <div class="main">
+          <h1 class="page-header">Command List</h1>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Command</th>
+                  <th>Command Class</th>
+                  <th>Ouptut Writer Class</th>
+                  <th>function</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>/reload</td>
+                  <td>com.sunonerim.framework.command.ReloadCommand</td>
+                  <td>null</td>
+                  <td>                  	
+  					<button type="button" class="btn btn-default btn-xs">delete</button>
+  					<button type="button" class="btn btn-default btn-xs">edit</button>
+                  </td>
+                </tr>
+       			</tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+        
+        
+</body>
+</html>

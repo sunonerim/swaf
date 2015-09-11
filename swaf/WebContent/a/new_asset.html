@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+	다양한 형태의 필드 구성을 편집하고 입력한 필드의 내용을 MongoDB에 저장한다. 
+	
+	action URL : /m/s/insert
+	 
+ -->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+  
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.js"></script>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<link rel="stylesheet" href="/m/js/jquery.bootstrap-touchspin.css">
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+<script src="/m/js/jquery.bootstrap-touchspin.js"></script>
+<script src="/m/js/jsrender.js"></script>
+<script src="/m/js/sfEntityUI.js"></script>
+
+<script>
+//배열로 필드정보를 로드한다.  원래는 데이터베이스에서 필드정보를 가져와야한다. 
+var	field_metas = [
+	 	 {"fieldType":"text",    "fieldName":"sb-asset"       ,"fieldLabel": "room"}	 	
+	 	,{"fieldType":"hidden",  "fieldName":"sb-merchantid"  ,"fieldLabel": "MerchantID",  "default":"234dddd"} 
+	 	,{"fieldType":"longtext","fieldName":"sb-description"  ,"fieldLabel": "Description"}
+	 	,{"fieldType":"text"	,"fieldName":"sb-options"  	,"fieldLabel": "Options  <small>(delimter by comma)</small>"}
+	 	
+	 	,{"fieldType":"image",  "fieldName":"sb-image"       ,"fieldLabel": "Image"}
+	 	
+	 	,{"fieldType":"number",  "fieldName":"sb-count"       ,"fieldLabel": "Number of Rooms", "default":"10"}
+	 	,{"fieldType":"number",  "fieldName":"sb-price"       ,"fieldLabel": "price per day", "default":"40",	"price":20}
+		
+	 	,{"fieldType":"number",  "fieldName":"sb-adult"       ,"fieldLabel": "adult", 		"MaxValue":10, "MinValue":1, 	"price":20}
+		,{"fieldType":"number",  "fieldName":"sb-child" 	  ,"fieldLabel": "child", 		"MinValue":0, 					"price":10}
+		
+		,{"fieldType":"label",   "fieldName":"sb-image"       ,"fieldLabel": "Beds in the room"}
+		
+		,{"fieldType":"number",  "fieldName":"sb-single" 	  ,"fieldLabel": "Single", 		"MaxValue":10,"MinValue":0, 	"price":10}
+		,{"fieldType":"number",  "fieldName":"sb-double" 	  ,"fieldLabel": "Double", 		"MaxValue":10,"MinValue":0, 	"price":10}
+		,{"fieldType":"number",  "fieldName":"sb-queen" 	  ,"fieldLabel": "Queen" , 		"MaxValue":10,"MinValue":0, 	"price":10}
+		,{"fieldType":"number",  "fieldName":"sb-king"   	  ,"fieldLabel": "King"  , 		"MaxValue":10,"MinValue":0, 	"price":10}
+		
+		,{"fieldType":"select",  "fieldName":"sb-rate"     	  ,"fieldLabel": "Rate Type", 	"options":[{"option":"Price per person", "value":"p"}, {"option":"Price per room", "value":"r"}]}
+		
+];
+
+
+$(document).ready(function(){
+	// 서버에서 필드 정보를 가져온 후 여기서 필드를 추가한다. 
+	addFields( "#insert-form", field_metas );
+ 	
+	$("#submit-btn").click(function(){
+		console.log( "submit-btn clicked..." );
+		
+		var	param =  new Object() ;
+		
+		$("#insert-form input").each(function(){
+			param[this.id] = $(this).val();
+		});
+			
+		$("#insert-form select").each(function(){
+			param[this.id] = $(this).val();
+		});
+		
+		$("#insert-form checkbox").each(function(){
+			param[this.id] = $(this).val();
+		});
+
+		$("#insert-form textarea").each(function(){
+			param[this.id] = $(this).val();
+		});
+		
+		console.log(param);
+		/*
+		$.ajax( {
+			url : "/m/s/insert",
+			data: param
+		}).done(function(data){
+				
+		});
+		*/
+	});
+}); // end of $(document).ready
+
+
+</script>
+
+
+  
+<title>New Asset Form</title>
+
+</head>
+<body>
+
+<div id="result"></div>
+
+<H1>HOTEL BOOKING FORMS</H1>
+<form class="form-horizontal" id="insert-form">
+</form>
+
+<div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button id="submit-btn" class="btn btn-default">Insert New Record</button>
+    </div>
+  </div>
+ 
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+		<div class="btn-group btn-group-xs" role="group">
+		    <button type="button" class="btn btn-default" id="add-text-field-btn">Number Attribute</button>
+		    <button type="button" class="btn btn-default" id="add-email-field-btn">Checkbox Attribute</button>
+		    <button type="button" class="btn btn-default" id="add-pic-field-btn">Select Attribute</button>
+		  </div>
+    </div>
+  </div>
+</div>  
+  
+</body>
+</html>

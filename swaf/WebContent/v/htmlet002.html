@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+      
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  
+
+<script>
+$(document).ready(function(){	
+	
+	/* 
+	$( document ).mousemove(function( event ) {	  
+	}); 
+	*/		
+	
+	$("#position4").click(function(){
+		smkImgHelloWorld();
+	});	
+}); // end of $(document).ready
+</script>
+
+
+<style type="text/css">
+body {
+	background: #FF94B8;
+}
+.clip {
+  position: relative;
+  height:100%;
+  width: 100%;
+  border: solid 1px #ccc;
+}
+
+.clip img {
+  position: absolute;
+  left:0px;
+  top:0px;
+  /* clip: rect(40px 200px 200px 40px); */
+}
+
+  .positionDiv {
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    background: #080;
+  }
+</style>
+</head>
+
+<body>
+	<div class="clip">
+		<h1 id="ta-0001">#######</h1>
+		
+		<div class="smk-image-canvas-area" style="position:absolute; left:100px; top:100px; width:360px; height:240px; overflow:hidden; box-shadow: outset 0 1px 1px rgba(0,0,0,.075);"><img id="ta-0002" /></div>
+		<div class="smk-image-canvas-area" style="position:absolute; left:100px; top:300px; width:240px; height:120px; overflow:hidden;"><img id="ta-0004" /></div>
+		<div class="positionDiv" id="position4"></div>
+	</div>
+</body>
+</html>

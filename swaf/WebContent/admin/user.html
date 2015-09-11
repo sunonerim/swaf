@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SWAF ADMIN</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="http://getbootstrap.com/examples/starter-template/starter-template.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css"/>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="../js/bootstrap-table.js"></script>
+<script src="../js/bootstrap-table-swaf-editable.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+<style>
+input.long-input{
+    width:240px;
+}
+</style>
+
+<script>
+
+
+var	$table = $('#command-table');
+
+$(document).ready(function(){
+	
+	buildTable();
+	
+	//console.log("bbbbbbbbbbbbb.....");
+	$('#command-table').bootstrapTable('buildNewForm');
+	
+	
+	
+	$('#command-table').on('expand-row.bs.table', function (e, index, row, $detail) {
+		$div = $("<div>Roles </div>"); 
+				
+		for ( var i=0; i<row.Roles.length; i++){
+			$div.append('<span class="label label-primary">'+ row.Roles[i] + '</span> ')			
+		}
+		$div.appendTo( $detail ); //$detail.append();
+		console.log( index , row );
+    });
+	
+	$('#command-table').on('editable-save.bs.table', function(a, col_name, row_data, prev_val, new_val, rrr) {
+		console.log("save this ", col_name, row_data);
+		console.log(a);
+	});
+	
+	
+	$('#remove').click(function () {
+		$('#command-table').bootstrapTable('doLoopForChecked', function(index, row){
+			console.log(index, row);
+		});		
+    });
+	
+	$('#reload').click(function () {
+					
+    });
+	
+	//##########################################################################
+	// test make up the form for creating new record.
+	//
+	//$('#command-table').bootstrapTable.buildCreationForm();//('buildCreationForm');
+	//$('#command-table').bootstrapTable('buildCreationForm', '#new-command-form');
+
+	$('#test-create').click( function() {			
+		console.log( $table.bootstrapTable('getOptions') );		
+		$( '#' + $('#command-table').bootstrapTable('getOptions').formOptions.formID ).modal('show');		
+	});
+	
+});
+
+
+
+function	buildTable() {	
+	$('#command-table').bootstrapTable({
+		pageSize: 50,
+		idField : 'UserID',
+		url		: '/m/s/listUser',
+		sidePagination:'server',
+		formOptions :  {
+						formID		: 'userDialog',
+						title		: '신규 유저 등록',
+						listAction	: '/m/s/listUser',
+						createAction: '/m/s/createUser',
+						}, 		
+	    columns: [
+	    {
+	    	field: 'state',
+            checkbox: true,
+            align: 'center',
+            valign: 'middle'
+	    }, {
+	        field: 'UserID',
+	        title: 'UserID',
+	        	formInput:true,
+	    }, {
+	        field: 'UserName',
+	        title: 'UserName',
+	        editable: true,	
+	        formInput:true,	        
+	        
+	    }, {
+	        field	: 'Password',
+	        title	: '암호',
+	        editable: true,
+	        type	: 'text',
+	        formInput : true,
+		}, {
+	        field   : 'Kind',
+	        title   : 'Kind',       
+    	}, {
+	        field	: 'Roles',
+	        title	: '역할',
+	        formInput : true,  
+	        type	: 'checklist',
+	        source  : [
+						{value: 'admin',	text: 'admin'},
+						{value: 'user01', 	text: 'user01'},
+						{value: 'user02',	text: 'user02'},						
+						{value: 'user03', 	text: 'user03'}
+	                   ],
+		}, {
+	        field	: 'Select',
+	        title	: '선택',
+	        type	: 'select',
+	        formInput : true,
+	        source  : [
+						{value: 1,			text: 'Active'},
+						{value: 2, 			text: 'Blocked'},
+						{value: 3,			text: 'Deleted'},
+						{value: 'system',	text: 'system'}, 
+						{value: 'udc', 		text: 'user defined command'}
+	                   ],
+		}]
+	});
+}
+
+</script>
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">SWAF</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Command</a></li>
+            <li><a href="#about">User</a></li>
+            <li><a href="#contact">Role</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+	<div class="container" > 
+		<div class="container-fluid">
+	      <div class="row">
+	
+	        <div class="main">
+	          <h1 class="page-header">사용자 목록</h1>
+	          <div class="table-responsive">
+	          
+	          
+			    <div id="toolbar">
+					<!-- Button trigger modal -->
+					<button id="test-create" class="btn btn-primary">TEST</button>
+					<button id="remove" 	class="btn btn-danger" > <i class="glyphicon glyphicon-remove"></i> Delete </button>
+					<button id="reload" 	class="btn btn-primary" >reload</button>
+			    </div>
+	             <table id="command-table" class="table table-striped" 
+	             			data-toolbar="#toolbar"
+	            			data-pagination="true" 
+		       			   data-show-refresh="true"
+				           data-show-toggle="true"
+				           data-show-columns="true"
+				           data-show-export="true"
+				           data-detail-view="true" >				    
+				</table>	
+				
+						
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	</div>    
+        
+        
+</body>
+</html>

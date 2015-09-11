@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+
+
+.ui-content
+{
+	background-color: #d8d8d8;
+}
+
+div.ak-list-widget
+{
+	background-color: #FFFFFF;
+	
+    border-style: solid;
+    border-color: #d8d8d8;
+    border-width: 1px;   
+    
+     	
+}
+
+.ak-sns-pane img
+{
+	width : 1.5em;
+	height : 1.5em;
+	margin : 0.4em;
+}
+.ui-content
+{
+	padding:0.5em
+}
+.ui-grid-solo>.ui-block-a .ak-list-widget
+{
+	margin:10px 0px 10px 0px;
+}
+
+
+.ui-grid-a>.ui-block-a .ak-list-widget
+{
+	margin:0px 5px 10px 0px;
+}
+
+ui-grid-a>.ui-block-b .ak-list-widget
+{
+	margin:0px 0px 10px 5px;
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="css/ak.css">
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+	console.log("document is ready ...");
+
+  $(".ui-content").on("swipeleft",function(){	
+	  console.log("swipe take place");
+      $(this).hide();
+	});                       
+});
+</script>
+
+</head>
+
+<body>
+
+<div data-role="page" id="ak-mainpage">
+  <div id="ak-mainmenu"  data-role="panel"  data-display="overlay" data-position-fixed="true"> 
+  	<ul data-role="listview">  			
+  		<li><a href="#">
+  		<h2>Google Chrome</h2>
+        <p>Google Chrome is a free, open-source web browser. Released in 2008.</p>
+  		Drama
+  		</a></li>
+  		
+		<li><h2>Google Chrome</h2></li>
+		<li><a href="#">Movie</a></li>
+  	</ul>    
+  </div> 
+  
+  <div data-role="header" data-position="fixed">    
+    <a href="#ak-mainmenu" class="ui-btn ui-btn-inline">M</a>    
+	<h1>AllKorea.media</h1>  	
+  </div>
+
+  <div data-role="main" class="ui-content" >
+    <h2>KARA许英智出演Rainbow金智淑个人摄影展</h2>        
+    <img src="imgs/contents/cont_0010.jpg" width="100%"/>    
+    <p>2月7日下午，女团Rainbow金智淑在首尔忠武路举办了个人摄影展，Rainbow成员到场助阵，尽显义气。
+据悉，金智淑私下十分热爱摄影，此次摄影展将展示金智淑的个人作品。此次公开的这些作品均体现出了金智淑的情感与个性，也是金智淑向摄影界迈出的第一步。此外，金智淑个人摄影展将于2月5日开放至2月25日，所有收入将全部捐给儿童慈善机构。
+另外，女团AfterSchool依英、KARA许英智、Hello Venus Lime、男团A-JAX孟尹永、主持人崔熙、谐星金钟民也出席了该活动。（责编：全英实）<全星网>
+版权所有 全星网 转载请标明出处</p>
+
+	<h2>Product You Are Interest In</h2>
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+      	<div class="ak-list-widget">      		
+      		<img src="imgs/products/product_0001.jpg" width="100%"/>
+      		<h4>KARA许英智出演Rainbow金智淑个人摄影展</h4>
+      	</div>
+      </div>
+      
+      <div class="ui-block-b" >
+      	<div class="ak-list-widget">      		
+      		<img src="imgs/products/product_0002.jpg" width="100%"/>
+      		<h4>KARA许英智出演Rainbow金智淑个人摄影展</h4>
+      	</div>
+      </div>
+    </div>
+    
+  </div>
+               
+  <div data-role="footer">
+    <h1>Footer Text</h1>
+  </div>
+
+</div>
+		
+		
+		
+		
+<div data-role="page" id="pagetwo">
+  <div data-role="header">
+    <h1>Welcome To My Homepage</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <p>Click on the link to go back. <b>Note</b>: fade is default.</p>
+    <a href="#ak-mainpage" data-transition="none" >Go to Page One</a>
+  </div>
+
+  <div data-role="footer">
+    <h1>Footer Text</h1>
+  </div>
+</div> 
+		
+		
+</body>
+</html>

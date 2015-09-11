@@ -1,0 +1,587 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+  
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+<script>
+
+/*
+ * 이미지 처리 작업의 정보를 적용한다. 이는 현재 이미지 크기및 처리 정보를 표시한다. =
+ */
+var	gImageJob = {};
+gImageJob["left"] = 0;
+gImageJob["top"] =  0;
+
+gImageJob["width"] = 200;
+gImageJob["height"] = 200;
+
+gImageJob["prevX"] = 200;
+gImageJob["prevY"] = 200;
+
+gImageJob.imgOrigWidth  = 0;		// 원래 이미지 너비 크기
+gImageJob.imgOrigHeight = 0;		// 원래 이미지 높이 크기
+
+gImageJob.ratio = 1.0;
+
+var	gMouseDown = false;
+var	gPrevMousePosition = {x:0, y:0};
+var	gCanvas    = {};
+
+$(document).ready(function(){	
+	
+			
+	/* $("img.clip").css( "clip", "rect(40px 300px 300px 40px);") */
+	/* $("#smk-edit-clip-image").hide(); */
+	gCanvas.width = $(".canvas:first").width();
+	gCanvas.height = $(".canvas:first").height();
+	
+	setClip( "img.clip", gImageJob.left, gImageJob.top, gImageJob.width, gImageJob.height );
+	$(".canvas").offset({top:0, left:0});
+	
+	console.log("gCanvas.width:" + gCanvas.width  + "     gCanvas.height:" + gCanvas.height);
+	
+	$( "#smk-image-canvas" ).mousedown(function( event ) {		 
+		gPrevMousePosition.x = event.clientX;
+		gPrevMousePosition.y = event.clientY;
+		gMouseDown = true;
+	});
+	
+	$( "#smk-image-canvas"  ).mousemove(function( event ) {
+		if( !gMouseDown ) return;
+		event.preventDefault();
+		
+		var move_x = event.clientX - gPrevMousePosition.x  ;
+		var move_y = event.clientY - gPrevMousePosition.y  ;
+		
+		gPrevMousePosition.x = event.clientX;
+		gPrevMousePosition.y = event.clientY;
+		
+		moveClipArea( move_x, move_y);
+	}); 
+	
+	
+	$( "#smk-image-canvas" ).mouseup(function( event ) {
+		if( !gMouseDown ) return;
+		
+		gMouseDown = false;
+	});
+	
+	
+	$("button#smk-image-up-btn").click(function(){
+		fitWidthToCanvas();		
+	});
+
+	$("button#smk-image-left-btn").click(function(){
+		fitHeightToCanvas();		
+	});
+	
+	$("button#smk-image-right-btn").click(function(){
+		resetImageDimension();		
+	});
+	
+	$("button#smk-image-down-btn").click(function(){
+		console.log("gImageJob.left>" + gImageJob.left + ";      gImageJob.top>" + gImageJob.top );			
+	});
+
+	
+	$("button#smk-image-img-apply").click(function(){
+		loadImage( "smk-edit-image", $("#smk-image-002").val() );
+	});
+	
+});	
+
+
+function	reposition(){
+	var re_offset = {top:0, left:0};
+	
+	var cur_image_width = $("#smk-edit-image").width();	
+	if(  cur_image_width < gCanvas.width ) re_offset.left = (gCanvas.width - cur_image_width ) / 2;
+	
+	
+	var cur_image_height = $("#smk-edit-image").height();	
+	if(  cur_image_height < gCanvas.height ) re_offset.top = (gCanvas.height - cur_image_height ) / 2;
+	
+	$("#smk-edit-image").offset( re_offset );
+	$("#smk-edit-clip-image").offset( re_offset ); 
+}
+
+
+function	resize( _new_ratio ) {	
+	$("#smk-edit-image").width( _new_ratio * gImageJob.imgOrigWidth );
+	$("#smk-edit-clip-image").width( _new_ratio * gImageJob.imgOrigWidth );
+	
+	gImageJob.ratio = _new_ratio;
+	
+	console.log( "gImageJob.ratio > " + gImageJob.ratio);
+	
+}
+
+function	moveClipArea(  move_x, move_y){
+	console.log("move_x : " + move_x + "      move_y : " + move_y);
+		
+	gImageJob.left =  gImageJob.left + move_x /  gImageJob.ratio ;
+	gImageJob.top  =  gImageJob.top  + move_y /  gImageJob.ratio ;
+	
+	console.log("gImageJob.left : " + gImageJob.left + "      gImageJob.top : " + gImageJob.top);
+	
+	setClip(  "#smk-edit-clip-image", gImageJob.left * gImageJob.ratio, 
+			gImageJob.top * gImageJob.ratio, gImageJob.width * gImageJob.ratio, gImageJob.height * gImageJob.ratio  );
+}
+
+function	setClip(  target, left, top, width, height ){
+	var clip_rect = "rect(" + top + "px " + (left + width ) + "px " + (top+height) + "px " + left + "px)"; 
+	$(target).css( "clip", clip_rect);
+}
+
+function	initImageSize(){
+	gImageJob.imgOrigWidth  =  $("#smk-edit-image").width();
+	gImageJob.imgOrigHeight =  $("#smk-edit-image").height();
+	gImageJob.ratio         =  1.0;
+	
+	console.log("gImageJob.imgOrigWidth>" + $("#smk-edit-image").width() + ";      gImageJob.imgOrigHeight>" + gImageJob.imgOrigHeight);
+	reposition();
+	
+	setClip(  "#smk-edit-clip-image", 0, 0, gImageJob.width, gImageJob.height  );
+	
+}
+
+
+
+function	repositionClip() {
+	setClip( "img.clip", gImageJob.left * gImageJob.ratio , gImageJob.top* gImageJob.ratio, gImageJob.width* gImageJob.ratio, gImageJob.height* gImageJob.ratio );
+}
+
+
+
+
+function	resetImageDimension( ){
+	resize( 1.0 );
+	reposition();
+	repositionClip();
+}
+
+function	fitWidthToCanvas(){
+	/* 
+	console.log( "canvas is " + $(".canvas:first").width() );		
+	console.log( "image width is " + $("#smk-edit-image").width() );
+	 */
+	resize( gCanvas.width /gImageJob.imgOrigWidth);
+	reposition();	
+	repositionClip();
+}
+
+
+function	fitHeightToCanvas(){	
+	resize( gCanvas.height / gImageJob.imgOrigHeight );
+	reposition();
+	repositionClip();
+}
+
+
+
+function	notify() {
+	$("#smk-edit-clip-image").attr("src",  $("#smk-edit-image").attr("src") );	
+	setTimeout(  initImageSize, 1000);
+}
+
+function	loadImage( img_id, img_src){
+	$( "#smk-edit-image").remove();
+	$( "#smk-edit-clip-image").remove();
+	
+	// create new <IMG>
+	$("#smk-image-bottom-canvas").append( "<img id='smk-edit-image'>");
+	$("#smk-image-canvas").append( "<img id='smk-edit-clip-image' class='clip'>");
+	
+	$( "#smk-edit-image").attr("src", img_src);
+	$( "#smk-edit-image").attr("onload", notify);
+	
+	/* img_obj.src   = img_src;
+	img_obj.onload = notify; */
+	
+}
+</script>
+
+
+<style type="text/css">
+/* 
+.canvas_pane {
+  overflow:hidden;
+}
+*/
+.canvas {
+  position: absolute;
+  height:600px;
+  width: 800px;
+  overflow:scroll;
+  
+  border: solid 1px #ccc;
+  
+}
+
+.bottom {
+	background-image:url("/m/imgs/common/bg001.png");
+}
+.dark {
+  background: #000;
+  opacity: 0.5;
+  filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
+img.clip{
+  position: absolute;
+  /* clip: rect(0px 200px 200px 0px); */
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="row">
+  <div  class="col-md-8">
+  	<div  id="smk-image-bottom-canvas" class="canvas bottom">
+  		<img id="smk-edit-image" >
+  	</div>
+  	
+  	<div class="canvas dark"></div>
+  	
+  	<div id="smk-image-canvas" class="canvas">
+  		<img id="smk-edit-clip-image" class="clip">
+  	</div>
+  </div>
+  
+  <div class="col-md-4">
+  	<input   id="smk-image-001" type="text">
+  	<button  id="smk-image-apply">apply</button>
+  	
+  	image URL <input   id="smk-image-002" type="text" value="http://img.styleonme.com/files/goods/1423540935_1.jpg">
+  	<button  id="smk-image-img-apply">apply image</button>
+  	<BR>
+  	<ul>
+  		<li><button  id="smk-image-up-btn">fit width to Canvas</button></li>  	
+  		<li><button  id="smk-image-left-btn">fit height to Canvas</button></li>
+  		<li><button  id="smk-image-right-btn">reset image dimension</button></li>
+  		<li><button  id="smk-image-down-btn">down</button></li>
+  	</ul>  	
+  </div>
+</div>
+
+
+
+</body>
+</html>
+
+
+<script>
+
+/*
+ * 이미지 처리 작업의 정보를 적용한다. 이는 현재 이미지 크기및 처리 정보를 표시한다. =
+ */
+ 
+function ImageEditJob ( img_templ_width, img_templ_height){
+	this.imageLeft  = 0;
+	this.imageTop   = 0;
+	
+	this.imageTemplWidth  = img_templ_width;
+	this.imageTemplHeight = img_templ_height;
+	
+	this.canvasWidth  = $(".canvas:first").width();
+	this.canvasHeight = $(".canvas:first").height();
+	
+
+	
+	
+	this.loadImage   = function	( img_src ){
+		$( "#smk-edit-image").remove();
+		$( "#smk-edit-clip-image").remove();
+		
+		// create new <IMG>
+		$("#smk-image-bottom-canvas").append( "<img id='smk-edit-image'>");
+		$("#smk-image-canvas").append( "<img id='smk-edit-clip-image' class='clip'>");
+		
+		$( "#smk-edit-image").attr("src",    img_src);
+		$( "#smk-edit-image").attr("onload", this.afterLoaded);
+		
+		/* img_obj.src   = img_src;
+		img_obj.onload = notify; */		
+	};
+	
+	this.afterLoaded =  function(){
+		console.log("this.afterLoaded() ...............");
+		$("#smk-edit-clip-image").attr("src",  $("#smk-edit-image").attr("src") );		
+		setTimeout(  imageLaodedCheck, 1000);
+		console.log("this.afterLoaded() >>>>>>>>>>>>>");
+	};
+	
+	this.initImageSize = function (){
+		this.imgOrigWidth  =  $("#smk-edit-image").width();
+		this.imgOrigHeight =  $("#smk-edit-image").height();
+		this.ratio         =  1.0;
+		
+		console.log("this.initImageSize >> gImageJob.imgOrigWidth>" + $("#smk-edit-image").width() + ";      gImageJob.imgOrigHeight>" + this.imgOrigHeight);
+		
+		this.reposition();
+		/*
+		setClip(  "#smk-edit-clip-image", 0, 0, gImageJob.width, gImageJob.height  );
+		*/
+	};
+	
+	
+	
+	
+	
+	
+	this.reposition = 	function(){
+		var re_offset = {top:0, left:70};
+		
+		/*
+		var cur_image_width = $("#smk-edit-image").width();	
+		if(  cur_image_width < this.canvasWidth ) re_offset.left = (this.canvasWidth  - cur_image_width ) / 2;
+		
+		
+		var cur_image_height = $("#smk-edit-image").height();	
+		if(  cur_image_height < this.canvasHeight) re_offset.top = (this.canvasHeight - cur_image_height ) / 2;
+		*/
+		console.log( re_offset);
+		$("#smk-edit-image").css("left", "70px");
+		$("#smk-edit-clip-image").hide();
+		
+		//$("#smk-edit-clip-image").css("left", "70px");
+		
+		/* $("#smk-edit-image").offset( re_offset );
+		$("#smk-edit-clip-image").offset( re_offset ); */ 
+	};
+
+}
+
+function	imageLaodedCheck(){
+	GImageEditJob.initImageSize();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var	GImageEditJob = new ImageEditJob( 200,200);
+
+
+var	gImageJob = {};
+gImageJob["left"] = 0;
+gImageJob["top"] =  0;
+
+gImageJob["width"] = 200;
+gImageJob["height"] = 200;
+
+gImageJob["prevX"] = 200;
+gImageJob["prevY"] = 200;
+
+gImageJob.imgOrigWidth  = 0;		// 원래 이미지 너비 크기
+gImageJob.imgOrigHeight = 0;		// 원래 이미지 높이 크기
+
+gImageJob.ratio = 1.0;
+
+var	gMouseDown = false;
+var	gPrevMousePosition = {x:0, y:0};
+var	gCanvas    = {};
+
+$(document).ready(function(){	
+	
+			
+	/* $("img.clip").css( "clip", "rect(40px 300px 300px 40px);") */
+	/* $("#smk-edit-clip-image").hide(); */
+	gCanvas.width = $(".canvas:first").width();
+	gCanvas.height = $(".canvas:first").height();
+	
+	$(".canvas").offset({top:0, left:0});
+	
+	console.log("gCanvas.width:" + gCanvas.width  + "     gCanvas.height:" + gCanvas.height);
+	
+	$( "#smk-image-canvas" ).mousedown(function( event ) {		 
+		gPrevMousePosition.x = event.clientX;
+		gPrevMousePosition.y = event.clientY;
+		gMouseDown = true;
+	});
+	
+	$( "#smk-image-canvas"  ).mousemove(function( event ) {
+		if( !gMouseDown ) return;
+		event.preventDefault();
+		
+		var move_x = event.clientX - gPrevMousePosition.x  ;
+		var move_y = event.clientY - gPrevMousePosition.y  ;
+		
+		gPrevMousePosition.x = event.clientX;
+		gPrevMousePosition.y = event.clientY;
+		
+		moveClipArea( move_x, move_y);
+	}); 
+	
+	
+	$( "#smk-image-canvas" ).mouseup(function( event ) {
+		if( !gMouseDown ) return;
+		
+		gMouseDown = false;
+	});
+	
+	
+	$("button#smk-image-up-btn").click(function(){
+		fitWidthToCanvas();		
+	});
+
+	$("button#smk-image-left-btn").click(function(){
+		fitHeightToCanvas();		
+	});
+	
+	$("button#smk-image-right-btn").click(function(){
+		resetImageDimension();		
+	});
+	
+	$("button#smk-image-down-btn").click(function(){
+		console.log("gImageJob.left>" + gImageJob.left + ";      gImageJob.top>" + gImageJob.top );			
+	});
+
+	
+	$("button#smk-image-img-apply").click(function(){
+		//loadImage( "smk-edit-image", $("#smk-image-002").val() );
+		GImageEditJob.loadImage( $("#smk-image-002").val() );
+	});
+	
+});	
+
+
+/*
+function	reposition(){
+	var re_offset = {top:0, left:0};
+	
+	var cur_image_width = $("#smk-edit-image").width();	
+	if(  cur_image_width < gCanvas.width ) re_offset.left = (gCanvas.width - cur_image_width ) / 2;
+	
+	
+	var cur_image_height = $("#smk-edit-image").height();	
+	if(  cur_image_height < gCanvas.height ) re_offset.top = (gCanvas.height - cur_image_height ) / 2;
+	
+	$("#smk-edit-image").offset( re_offset );
+	$("#smk-edit-clip-image").offset( re_offset ); 
+}
+*/
+
+function	resize( _new_ratio ) {	
+	$("#smk-edit-image").width( _new_ratio * gImageJob.imgOrigWidth );
+	$("#smk-edit-clip-image").width( _new_ratio * gImageJob.imgOrigWidth );
+	
+	gImageJob.ratio = _new_ratio;
+	
+	console.log( "gImageJob.ratio > " + gImageJob.ratio);
+	
+}
+
+function	moveClipArea(  move_x, move_y){
+	console.log("move_x : " + move_x + "      move_y : " + move_y);
+		
+	gImageJob.left =  gImageJob.left + move_x /  gImageJob.ratio ;
+	gImageJob.top  =  gImageJob.top  + move_y /  gImageJob.ratio ;
+	
+	console.log("gImageJob.left : " + gImageJob.left + "      gImageJob.top : " + gImageJob.top);
+	
+	setClip(  "#smk-edit-clip-image", gImageJob.left * gImageJob.ratio, 
+			gImageJob.top * gImageJob.ratio, gImageJob.width * gImageJob.ratio, gImageJob.height * gImageJob.ratio  );
+}
+
+function	setClip(  target, left, top, width, height ){
+	var clip_rect = "rect(" + top + "px " + (left + width ) + "px " + (top+height) + "px " + left + "px)"; 
+	$(target).css( "clip", clip_rect);
+}
+
+function	initImageSize(){
+	gImageJob.imgOrigWidth  =  $("#smk-edit-image").width();
+	gImageJob.imgOrigHeight =  $("#smk-edit-image").height();
+	gImageJob.ratio         =  1.0;
+	
+	console.log("gImageJob.imgOrigWidth>" + $("#smk-edit-image").width() + ";      gImageJob.imgOrigHeight>" + gImageJob.imgOrigHeight);
+	reposition();
+	
+	setClip(  "#smk-edit-clip-image", 0, 0, gImageJob.width, gImageJob.height  );
+	
+}
+
+
+
+function	repositionClip() {
+	setClip( "img.clip", gImageJob.left * gImageJob.ratio , gImageJob.top* gImageJob.ratio, gImageJob.width* gImageJob.ratio, gImageJob.height* gImageJob.ratio );
+}
+
+
+function	resetImageDimension( ){
+	resize( 1.0 );
+	reposition();
+	repositionClip();
+}
+
+function	fitWidthToCanvas(){
+	/* 
+	console.log( "canvas is " + $(".canvas:first").width() );		
+	console.log( "image width is " + $("#smk-edit-image").width() );
+	 */
+	resize( gCanvas.width /gImageJob.imgOrigWidth);
+	reposition();	
+	repositionClip();
+}
+
+
+function	fitHeightToCanvas(){	
+	resize( gCanvas.height / gImageJob.imgOrigHeight );
+	reposition();
+	repositionClip();
+}
+
+
+
+function	notify() {
+	$("#smk-edit-clip-image").attr("src",  $("#smk-edit-image").attr("src") );	
+	setTimeout(  initImageSize, 1000);
+}
+
+function	loadImage( img_id, img_src){
+	$( "#smk-edit-image").remove();
+	$( "#smk-edit-clip-image").remove();
+	
+	// create new <IMG>
+	$("#smk-image-bottom-canvas").append( "<img id='smk-edit-image'>");
+	$("#smk-image-canvas").append( "<img id='smk-edit-clip-image' class='clip'>");
+	
+	$( "#smk-edit-image").attr("src", img_src);
+	$( "#smk-edit-image").attr("onload", notify);
+	
+	/* img_obj.src   = img_src;
+	img_obj.onload = notify; */
+	
+}
+</script>
